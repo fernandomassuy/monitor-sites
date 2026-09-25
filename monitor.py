@@ -15,19 +15,28 @@ TIMEOUT = 15      # segundos por tentativa
 RETRIES = 2       # tentativas antes de considerar fora do ar
 RETRY_WAIT = 20   # segundos entre tentativas
 
+# Alguns sites bloqueiam acessos sem cara de navegador (HTTP 403)
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/128.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+}
+
 
 def check(url: str) -> str | None:
     """Retorna None se ok, ou a descrição do erro."""
     erro = None
-    for _ in range(RETRIES):
+    for tentativa in range(RETRIES):
         try:
-            r = requests.get(url, timeout=TIMEOUT, headers={"User-Agent": "uptime-monitor"})
+            r = requests.get(url, timeout=TIMEOUT, headers=HEADERS)
             if r.status_code < 400:
                 return None
             erro = f"HTTP {r.status_code}"
         except requests.RequestException as e:
             erro = type(e).__name__
-        time.sleep(RETRY_WAIT)
+        if tentativa < RETRIES - 1:
+            time.sleep(RETRY_WAIT)
     return erro
 
 
@@ -87,7 +96,7 @@ def heartbeat(webhook: str, sites):
 
 def main():
     sites = [s.strip() for s in os.environ["SITES"].split(",") if s.strip()]
-    webhook = os.environ["TEAMS_WEBHOOK_URL"]
+    webhook = os.environ["TEAMS_WEBHOOK_URL"].strip()  # remove quebra de linha colada junto
     pessoas = parse_mentions(os.environ.get("MENTIONS", ""))
     modo_heartbeat = "--heartbeat" in sys.argv
 
