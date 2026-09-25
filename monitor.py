@@ -33,6 +33,9 @@ def check(url: str) -> str | None:
             if r.status_code < 400:
                 return None
             erro = f"HTTP {r.status_code}"
+            # Diagnóstico: mostra quem respondeu e o início da página de erro
+            print(f"  [debug] {url} -> {r.status_code} | server={r.headers.get('Server')} "
+                  f"| x-cache={r.headers.get('X-Cache')} | corpo: {r.text[:200]!r}")
         except requests.RequestException as e:
             erro = type(e).__name__
         if tentativa < RETRIES - 1:
