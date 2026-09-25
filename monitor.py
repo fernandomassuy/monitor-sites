@@ -2,9 +2,9 @@
 Monitor de disponibilidade -> alerta no Microsoft Teams (Workflows webhook).
 
 Variáveis de ambiente:
-  SITES              "https://www.vw.com.br/pt.html,https://ofertas.vw.com.br/"
-  TEAMS_WEBHOOK_URL  "https://default41eb501af6714ce0a5bfb64168c370.5f.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/df1d8cf592414a6383d47a511b944bc7/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=zVg0baI1tyeMf64x3t9kZYnXNz-W5UdxcDJcxQej8xg"
-  MENTIONS           "Fernando Massuyama:fernando.massuyama@omc.com"
+  SITES              "https://site1.com,https://site2.com"
+  TEAMS_WEBHOOK_URL  URL gerada pelo Workflow do Teams
+  MENTIONS           "Nome Um:email1@empresa.com,Nome Dois:email2@empresa.com"
 """
 import os
 import sys
